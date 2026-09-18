@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Bestand Uploaden</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 40px auto; }
+        input[type=file] { margin: 20px 0; }
+        #result { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+
+<h2>Upload een bestand</h2>
+<p>Kies een bestand en klik op upload. Het wordt verwerkt door jouw AI‑workflow.</p>
+
+<input type="file" id="fileInput">
+<button onclick="upload()">Upload</button>
+
+<div id="result"></div>
+
+<script>
+async function upload() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) {
+        alert("Selecteer eerst een bestand.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    const text = await response.text();
+    document.getElementById("result").innerText = text;
+}
+</script>
+
+</body>
+</html>
