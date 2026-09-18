@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "route": "/upload.html",
+      "allowedRoles": ["anonymous", "authenticated"]
+    },
+    {
+      "route": "/api/upload",
+      "allowedRoles": ["authenticated"]
+    }
+  ],
+  "auth": {
+    "identityProviders": {
+      "azureActiveDirectory": {
+        "registration": {
+          "openIdIssuer": "https://login.microsoftonline.com/common"
+        }
+      }
+    }
+  },
+  "roles": {
+    "authenticated": {
+      "allowedUsers": [
+        "@dirksenbouwtechniek.nl"
+      ]
+    }
+  }
+}
