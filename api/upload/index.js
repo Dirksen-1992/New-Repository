@@ -14,17 +14,26 @@ module.exports = async function (context, req) {
     }
 
     try {
-        // GPT‑6 Astra API‑aanroep
+        // GPT‑6 Astra aanroepen via jouw Azure OpenAI endpoint
         const response = await axios.post(
-            "https://api.foundry.microsoft.com/models/gpt-6-astra/invoke",
+            "https://openai-dbt.services.ai.azure.com/openai/v1/chat/completions",
             {
-                input: "Verwerk dit bestand en geef een duidelijke output terug.",
-                file: file
+                model: "gpt-6-astra",
+                messages: [
+                    {
+                        role: "system",
+                        content: "Je bent een AI die bestanden verwerkt en duidelijke output teruggeeft."
+                    },
+                    {
+                        role: "user",
+                        content: `Verwerk dit bestand en geef een duidelijke samenvatting terug. Bestandsgrootte: ${file.length} bytes.`
+                    }
+                ]
             },
             {
                 headers: {
-                    "Authorization": `Bearer ${process.env.FOUNDRY_KEY}`,
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "api-key": process.env.FOUNDRY_KEY
                 }
             }
         );
@@ -32,7 +41,7 @@ module.exports = async function (context, req) {
         // Resultaat terug naar jouw website
         context.res = {
             status: 200,
-            body: response.data
+            body: response.data.choices[0].message.content
         };
 
     } catch (error) {
